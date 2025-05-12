@@ -1,7 +1,6 @@
 import runpod
 from transformers import AutoProcessor, BarkModel
 import scipy.io.wavfile
-import torch
 import io
 import base64
 
@@ -13,12 +12,12 @@ def handler(event):
     prompt = input.get('prompt', "Hey, I am an awesome AI")
     voice_preset = input.get("speaker", "v2/en_speaker_6")
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cuda"
     print(f"Using device: {device}")
 
     # Load processor and model
     processor = AutoProcessor.from_pretrained("suno/bark")
-    model = BarkModel.from_pretrained("suno/bark", torch_dtype=torch.float32).to(device)
+    model = BarkModel.from_pretrained("suno/bark").to(device)
 
     # Prepare inputs and move to correct device
     inputs = processor(prompt, voice_preset=voice_preset, return_tensors="pt")
