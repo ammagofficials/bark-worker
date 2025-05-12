@@ -1,20 +1,29 @@
-#!/bin/bash
-set -e
+FROM python:3.10-slim
 
-echo "Installing CUDA-enabled PyTorch..."
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# -------- System dependencies --------
+RUN apt-get update && apt-get install -y \
+    git \
+    ffmpeg \
+    libsndfile1 \
+    && rm -rf /var/lib/apt/lists/*
 
-echo "Installing basic Python requirements..."
-pip install -r requirements.txt
+# -------- Working directory --------
+WORKDIR /app
 
-echo "Installing soundfile..."
-pip install soundfile
+# -------- Install CUDA-enabled PyTorch --------
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
-echo "Installing Transformers (latest from HuggingFace GitHub)..."
-pip install git+https://github.com/huggingface/transformers.git
+# -------- Copy local code --------
+COPY . .
 
-echo "Installing Bark from GitHub..."
-pip install git+https://github.com/suno-ai/bark.git
+# -------- Install Bark + Transformers + other Python deps --------
+RUN pip install --no-cache-dir \
+    soundfile \
+    scipy \
+    numpy \
+    tokenizers \
+    git+https://github.com/huggingface/transformers.git \
+    git+https://github.com/suno-ai/bark.git
 
-echo "Starting app..."
-python rp_handler.py
+# -------- Run your handler --------
+CMD ["python", "rp_handler.py"]
