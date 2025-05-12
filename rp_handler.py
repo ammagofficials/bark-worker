@@ -1,4 +1,3 @@
-import runpod
 from transformers import AutoProcessor, BarkModel
 import scipy.io.wavfile
 import torch
