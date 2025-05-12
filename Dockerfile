@@ -1,22 +1,22 @@
 FROM python:3.10-slim
 
-# -------- System dependencies --------
+# System dependencies
 RUN apt-get update && apt-get install -y \
     git \
     ffmpeg \
     libsndfile1 \
     && rm -rf /var/lib/apt/lists/*
 
-# -------- Working directory --------
+# Working directory
 WORKDIR /app
 
-# -------- Install PyTorch 2.6.0+ with CUDA 11.8 --------
-RUN pip install --no-cache-dir torch==2.6.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# Install PyTorch with CUDA 11.8
+RUN pip install --no-cache-dir torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu118
 
-# -------- Copy your project code --------
+# Copy project code
 COPY . .
 
-# -------- Install Bark, Transformers, and other deps --------
+# Install Python dependencies
 RUN pip install --no-cache-dir \
     runpod \
     soundfile \
@@ -26,5 +26,5 @@ RUN pip install --no-cache-dir \
     git+https://github.com/huggingface/transformers.git \
     git+https://github.com/suno-ai/bark.git
 
-# -------- Start your handler --------
+# Start your app
 CMD ["python3", "rp_handler.py"]
