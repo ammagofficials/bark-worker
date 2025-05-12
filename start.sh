@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-# Install requirements
+echo "Installing requirements..."
 pip install -r requirements.txt
 
-# Install soundfile manually (requires binary wheels)
+echo "Installing soundfile manually..."
 pip install soundfile
 
-# Install Bark from GitHub (last, as it can be fragile)
+echo "Installing Bark from GitHub..."
 pip install git+https://github.com/suno-ai/bark.git
 
-# Finally run your app
-python main.py
+echo "Starting main app..."
+python rp_handler.py
