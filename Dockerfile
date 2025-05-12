@@ -1,9 +1,30 @@
 FROM python:3.10-slim
 
-WORKDIR /
-COPY requirements.txt /requirements.txt
-RUN pip install -r requirements.txt
-COPY rp_handler.py /
+# -------- System dependencies --------
+RUN apt-get update && apt-get install -y \
+    git \
+    ffmpeg \
+    libsndfile1 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Start the container
-CMD ["python3", "-u", "rp_handler.py"]
+# -------- Working directory --------
+WORKDIR /app
+
+# -------- Install CUDA-enabled PyTorch (cu118) --------
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# -------- Copy project code --------
+COPY . .
+
+# -------- Install Python dependencies --------
+RUN pip install --no-cache-dir \
+    runpod \
+    soundfile \
+    scipy \
+    numpy \
+    tokenizers \
+    git+https://github.com/huggingface/transformers.git \
+    git+https://github.com/suno-ai/bark.git
+
+# -------- Start your app --------
+CMD ["python3", "rp_handler.py"]
