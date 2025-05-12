@@ -11,8 +11,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Install PyTorch with CUDA 11.8
-RUN pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu126
-
+RUN pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu126
 # Copy project code
 COPY . .
 
