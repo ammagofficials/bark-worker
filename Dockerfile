@@ -1,24 +1,13 @@
 FROM python:3.10-slim
 
-# Add NVIDIA CUDA repository for libcudnn8
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gnupg \
-    curl \
-    && curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/7fa2af80.pub | apt-key add - \
-    && echo "deb https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64 /" > /etc/apt/sources.list.d/cuda.list \
-    && apt-get update \
-    && rm -rf /var/lib/apt/lists/*
-
 # System dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     ffmpeg \
     libsndfile1 \
-    libcudnn8 \
-    libopenblas-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Update pip to avoid installation issues
+# Update pip
 RUN pip install --no-cache-dir --upgrade pip
 
 # Working directory
