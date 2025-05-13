@@ -10,8 +10,12 @@ RUN apt-get update && apt-get install -y \
 # Working directory
 WORKDIR /app
 
-# Install PyTorch with CUDA 11.8
-RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# Install PyTorch 2.7.0 with CUDA 11.8
+RUN pip install --no-cache-dir torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Verify PyTorch version during build
+RUN python -c "import torch; print('PyTorch version:', torch.__version__)" > /app/pytorch_version.txt
+
 # Copy project code
 COPY . .
 
@@ -22,8 +26,8 @@ RUN pip install --no-cache-dir \
     scipy \
     numpy \
     tokenizers \
-    git+https://github.com/huggingface/transformers.git \
-    git+https://github.com/suno-ai/bark.git
+    safetensors \
+    transformers==4.31.0
 
 # Start your app
 CMD ["python3", "rp_handler.py"]
