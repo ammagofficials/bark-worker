@@ -5,16 +5,20 @@ RUN apt-get update && apt-get install -y \
     git \
     ffmpeg \
     libsndfile1 \
+    # Add CUDA-related dependencies
+    libcudnn8 \
+    libopenblas-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Update pip to avoid installation issues
+RUN pip install --no-cache-dir --upgrade pip
 
 # Working directory
 WORKDIR /app
 
-# Install PyTorch 2.7.0 with CUDA 11.8
-RUN pip install --no-cache-dir torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-
-# Verify PyTorch version during build
-RUN python -c "import torch; print('PyTorch version:', torch.__version__)" > /app/pytorch_version.txt
+# Install PyTorch 2.7.0 with CUDA 12.1 (fallback if CUDA 11.8 fails)
+RUN pip install --no-cache-dir torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 \
+    && python -c "import torch; print('PyTorch version:', torch.__version__)" > /app/pytorch_version.txt
 
 # Copy project code
 COPY . .
