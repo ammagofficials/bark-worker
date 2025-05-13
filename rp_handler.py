@@ -17,7 +17,7 @@ def handler(event):
 
     # Load processor and model
     processor = AutoProcessor.from_pretrained("suno/bark")
-    model = BarkModel.from_pretrained("suno/bark").to(device)
+    model = BarkModel.from_pretrained("suno/bark", use_safetensors=True).to(device)
 
     # Prepare inputs and move to correct device
     inputs = processor(prompt, voice_preset=voice_preset, return_tensors="pt")
