@@ -13,6 +13,7 @@ def handler(event):
     voice_preset = input.get("speaker", "v2/en_speaker_6")
 
     device = "cuda"
+    print(device)
     print(f"Using device: {device}")
 
     # Load processor and model
